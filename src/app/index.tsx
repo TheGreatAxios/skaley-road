@@ -18,6 +18,7 @@ import GameOverScreen from "@/screens/GameOverScreen";
 import HomeScreen from "@/screens/HomeScreen";
 import SettingsScreen from "@/screens/SettingsScreen";
 import GameContext from "@/context/GameContext";
+import Web3Context from "@/context/Web3Context";
 
 const DEBUG_CAMERA_CONTROLS = false;
 
@@ -138,6 +139,7 @@ class Game extends Component {
     Dimensions.removeEventListener("change", this.onScreenResize);
   }
 
+  // Potentially a good place to start things
   UNSAFE_componentWillMount() {
     this.engine = new Engine();
     // this.engine.hideShadows = this.hideShadows;
@@ -168,7 +170,11 @@ class Game extends Component {
     this.engine.init();
   };
 
-  onSwipe = (gestureName) => this.engine.moveWithDirection(gestureName);
+  onSwipe = async (gestureName) => {
+    this.engine.moveWithDirection(gestureName)
+    console.log("On Swipe");
+    await this.props.executeTransaction(gestureName);
+  };
 
   renderGame = () => {
     if (!this.state.ready) return;
@@ -232,6 +238,7 @@ class Game extends Component {
 
   render() {
     const { isDarkMode, isPaused } = this.props;
+    console.log(this.props);
 
     return (
       <View
@@ -305,9 +312,10 @@ const GestureView = ({ onStartGesture, onSwipe, ...props }) => {
 function GameScreen(props) {
   const scheme = useColorScheme();
   const { character } = React.useContext(GameContext);
+  const { executeTransaction } = React.useContext(Web3Context);
 
   return (
-    <Game {...props} character={character} isDarkMode={scheme === "dark"} />
+    <Game {...props} executeTransaction={executeTransaction} character={character} isDarkMode={scheme === "dark"} />
   );
 }
 

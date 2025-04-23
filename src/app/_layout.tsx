@@ -7,13 +7,16 @@ import GameProvider from "../context/GameProvider";
 import AudioManager from "@/AudioManager";
 import { useResolvedValue } from "@/hooks/useResolvedValue";
 import ModelLoader from "@/ModelLoader";
+import Web3Provider from "@/context/Web3Provider";
 
 export default function App() {
   return (
     <AssetLoading>
-      <GameProvider>
-        <Slot />
-      </GameProvider>
+      <Web3Provider>
+        <GameProvider>
+          <Slot />
+        </GameProvider>
+      </Web3Provider>
     </AssetLoading>
   );
 }
