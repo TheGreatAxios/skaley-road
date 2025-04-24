@@ -12,11 +12,9 @@ import Web3Provider from "@/context/Web3Provider";
 export default function App() {
   return (
     <AssetLoading>
-      <Web3Provider>
-        <GameProvider>
-          <Slot />
-        </GameProvider>
-      </Web3Provider>
+      <GameProvider>
+        <Slot />
+      </GameProvider>
     </AssetLoading>
   );
 }
