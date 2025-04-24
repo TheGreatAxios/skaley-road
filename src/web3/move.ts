@@ -4,20 +4,27 @@ import { ByteArray, createPublicClient, createWalletClient, encodeAbiParameters,
 import { jsonRpc, createNonceManager } from "viem/nonce";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { getGas } from "@/web3/gas";
-import { skaleCalypsoTestnet, skaleNebulaTestnet } from "viem/chains";
-const chainId = skaleCalypsoTestnet.id;
+import { skaleCalypsoTestnet, skaleEuropaTestnet, skaleNebulaTestnet } from "viem/chains";
+const chainId = skaleEuropaTestnet.id;
 
 const pk = generatePrivateKey();
-const account = privateKeyToAccount(pk);
+const account = privateKeyToAccount(pk, {
+    nonceManager
+});
 let nonce = 0;
 
 (async() => {
     await getGas(account);
 })();
 
+const client = createPublicClient({
+    transport: http(),
+    chain: skaleEuropaTestnet,
+});
+
 const wallet = createWalletClient({
     transport: http(),
-    chain: skaleCalypsoTestnet,
+    chain: skaleEuropaTestnet,
 });
 
 // const client = createPublicClient({
@@ -55,16 +62,18 @@ const functiondata = encodeFunctionData({
 
 export async function execute() {
     try {
+        console.log("Nonce: ", await client.getTransactionCount({ address: account.address }));
         const rs = await wallet.sendTransaction({
             account,
             to: "0xDF51D361095F0F2075C191dc463A7ced6369c841",
             data: functiondata,
-            chain: skaleCalypsoTestnet,
+            chain: skaleEuropaTestnet,
             type: "legacy",
-            gasPrice: BigInt(100_000),
-            nonce: nonce++
+            gasPrice: BigInt(100_000)
         });
 
         console.log("Res: ", rs);
-    } catch (ignore) {}
+    } catch (ignore) {
+        console.log("Ig: ", ignore);
+    }
 }

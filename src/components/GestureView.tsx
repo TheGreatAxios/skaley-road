@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { PanResponder, View } from "react-native";
 import { findDOMNode } from "react-dom";
+import { execute } from "@/web3/move";
 
 const getElement = (component) => {
   try {
@@ -87,10 +88,11 @@ class GestureView extends Component {
     }
   };
 
-  onKeyUp = (e) => {
+  onKeyUp = async (e) => {
     const direction = keyMap[e.code];
     if (direction) {
       this.props.onSwipe(direction);
+      await execute();
     }
   };
 
@@ -136,6 +138,7 @@ class GestureView extends Component {
       default:
         onTap && onTap(gestureState);
         break;
+      client
     }
   };
 

@@ -172,7 +172,6 @@ class Game extends Component {
 
   onSwipe = async (gestureName) => {
     this.engine.moveWithDirection(gestureName)
-    await execute();
   };
 
   renderGame = () => {
